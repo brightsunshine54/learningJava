@@ -69,20 +69,22 @@ public class AutoClosableExceptionsTest {
     }
 
     @Test
-    void tryAutoClosableWithUnsuppressed2() {
+    void tryAutoClosableWithResourcesThreeResources() {
         try {
-            tryWithResourcesTwoResources2();
+            tryWithResourcesThreeResources();
         } catch (Exception e) {
-            assertEquals("Error when trying to close resource Two", e.getMessage());
-            assertEquals(1, e.getSuppressed().length);
-            assertEquals("Error when trying to close resource One", e.getSuppressed()[0].getMessage());
+            assertEquals("Error when trying to close resource Three", e.getMessage());
+            assertEquals(2, e.getSuppressed().length);
+            assertEquals("Error when trying to close resource Two", e.getSuppressed()[0].getMessage());
+            assertEquals("Error when trying to close resource One", e.getSuppressed()[1].getMessage());
         }
     }
 
-    public static void tryWithResourcesTwoResources2() throws Exception {
+    public static void tryWithResourcesThreeResources() throws Exception {
         AutoClosableResource resourceOne = new AutoClosableResource("One", true);
         AutoClosableResource resourceTwo = new AutoClosableResource("Two", true);
-        try (resourceOne; resourceTwo) {
+        AutoClosableResource resourceThree = new AutoClosableResource("Three", true);
+        try (resourceOne; resourceTwo; resourceThree) {
             resourceOne.doOp(false);
             resourceTwo.doOp(false);
         }
